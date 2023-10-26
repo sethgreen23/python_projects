@@ -15,7 +15,7 @@ quiz_dict = {
 		'answer':2		
 	},
 	4:{
-		'question':"How many state there in USA",
+		'question':"How many state there in USA?",
 		'choices' : ["51", "32", "75", "40"],
 		'answer':0		
 	} 
