@@ -14,7 +14,9 @@ def random_password():
 	pass_length = int(input("Enter the length of the password: "))
 	counter = 0
 	password = ""
+	# password = []
 	while counter < pass_length:
+		# password.append(random.choice(all_printable))
 		password += random.choice(all_printable)
 		counter += 1
 	print(f"Your generated password : '{password}'")
