@@ -77,6 +77,17 @@ Empty list
 		... 
 	TypeError: matrix must be a matrix (list of lists) of integers/floats
 
+None:
+======
+
+
+::
+	>>> matrix = None
+	>>> matrix_divided(matrix, 5)
+	Traceback (most recent call last):
+		... 
+	TypeError: matrix must be a matrix (list of lists) of integers/floats
+
 
 Empty matrix with empty list
 =============================
@@ -90,12 +101,28 @@ Empty matrix with empty list
 	TypeError: matrix must be a matrix (list of lists) of integers/floats
 
 
+::
+	>>> matrix = [None, None, None]
+	>>> matrix_divided(matrix, 5)
+	Traceback (most recent call last):
+		... 
+	TypeError: matrix must be a matrix (list of lists) of integers/floats
+
+
 Matrix with different types
 ===========================
 
 
 ::
 	>>> matrix = [[1, 2, 3], {'id': 25, 'name': "brian", "gender": "Male"}, ("Hello", "German", "English")]
+	>>> matrix_divided(matrix, 5)
+	Traceback (most recent call last):
+		... 
+	TypeError: matrix must be a matrix (list of lists) of integers/floats
+
+
+::
+	>>> matrix = [[1, 2, 3], {'id': 25, 'name': "brian", "gender": "Male"}, ("Hello", "German", "English"), None]
 	>>> matrix_divided(matrix, 5)
 	Traceback (most recent call last):
 		... 
@@ -120,6 +147,14 @@ Matrix with length one
 
 ::
 	>>> matrix = [[1], {'id': 25}, ["Hello"]]
+	>>> matrix_divided(matrix, 5)
+	Traceback (most recent call last):
+		... 
+	TypeError: matrix must be a matrix (list of lists) of integers/floats
+
+
+::
+	>>> matrix = [[1], {'id': 25}, ["Hello"], None]
 	>>> matrix_divided(matrix, 5)
 	Traceback (most recent call last):
 		... 
@@ -188,8 +223,18 @@ Div with value 0
 	ZeroDivisionError: division by zero
 
 
+
 Div with values different the int and float
 ===========================================
+
+
+
+::
+	>>> matrix = [[1, 2, 3], [-4.8, -6, -6.2], [7, 6.5, 8.5]]
+	>>> matrix_divided(matrix, None)
+	Traceback (most recent call last):
+		... 
+	TypeError: div must be a number
 
 
 ::

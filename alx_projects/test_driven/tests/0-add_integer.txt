@@ -73,15 +73,27 @@ Non-Float/Integer with Float/Integer
 	Traceback (most recent call last):
 		...
 	TypeError: a must be an integer
+
+
 	>>> add_integer({"brand": "Ford"}, 3)
 	Traceback (most recent call last):
 		...
 	TypeError: a must be an integer
+
+
 	>>> add_integer("4", 5.5)
 	Traceback (most recent call last):
 		...
 	TypeError: a must be an integer
+
+
 	>>> add_integer("hello", -2)
+	Traceback (most recent call last):
+		... 
+	TypeError: a must be an integer
+
+
+	>>> add_integer(None, None)
 	Traceback (most recent call last):
 		... 
 	TypeError: a must be an integer
@@ -104,7 +116,15 @@ Non-Float/Integer with Float/Integer
 	Traceback (most recent call last):
 		...
 	TypeError: b must be an integer
+
+
 	>>> add_integer(0, "hello")
+	Traceback (most recent call last):
+		... 
+	TypeError: b must be an integer
+
+
+	>>> add_integer(0, None)
 	Traceback (most recent call last):
 		... 
 	TypeError: b must be an integer
@@ -128,6 +148,7 @@ Non-Float-Integer-Numerical with Non-Float-Integer-Numerical
 	Traceback (most recent call last):
 		... 
 	TypeError: b must be an integer
+	
 	>>> add_integer(-545666666666666655555555559999999999, -58444444444444444444444444)
 	-545666666725111100000000004444444443
 	>>>
