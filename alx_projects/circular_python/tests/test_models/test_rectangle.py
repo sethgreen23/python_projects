@@ -169,6 +169,15 @@ class TestRectangleValidValues(unittest.TestCase):
         with self.assertRaises(ValueError):
             r1 = Rectangle(1, 2, 23, -10)
 
+    def test_area(self):
+        """Test the area values"""
+        r1 = Rectangle(3, 2)
+        self.assertEqual(r1.area(), 6)
+        r1 = Rectangle(2, 10)
+        self.assertEqual(r1.area(), 20)
+        r1 = Rectangle(8, 7, 0, 0, 12)
+        self.assertEqual(r1.area(), 56)
+
 
 if __name__ == '__main__':
     unittest.main()
