@@ -66,7 +66,7 @@ class Rectangle(Base):
     @y.setter
     def y(self, value):
         """y setter"""
-        if not  isinstance(value, int):
+        if not isinstance(value, int):
             raise TypeError("y must be an integer")
         if value < 0:
             raise ValueError("y must be >= 0")
@@ -75,3 +75,51 @@ class Rectangle(Base):
     def area(self):
         """Calcule the area of a Rectangle"""
         return self.height * self.width
+
+    def display(self):
+        """Print the rectangle with the character #"""
+        for _ in range(self.y):
+            print()
+        i = self.height
+        while (i > 0):
+            for _ in range(self.x):
+                print(" ", end="")
+            for _ in range(self.width):
+                print("#", end="")
+            print()
+            i -= 1
+
+    def __str__(self):
+        """String representation of a rectangle"""
+        return "[Rectangle] ({:d}) {:d}/{:d} - {:d}/{:d}".format(self.id,
+                                                                 self.x,
+                                                                 self.y,
+                                                                 self.width,
+                                                                 self.height)
+
+    def update(self, *args, **kwargs):
+        """Apdate the instance of the object"""
+        if args:
+            for i, value in enumerate(args):
+                if i == 0:
+                    self.id = value
+                if i == 1:
+                    self.width = value
+                if i == 2:
+                    self.height = value
+                if i == 3:
+                    self.x = value
+                if i == 4:
+                    self.y = value
+        else:
+            for key, value in kwargs.items():
+                if key == "id":
+                    self.id = value
+                elif key == "width":
+                    self.width = value
+                elif key == "height":
+                    self.height = value
+                elif key == "x":
+                    self.x = value
+                elif key == "y":
+                    self.y = value
