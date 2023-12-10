@@ -39,3 +39,51 @@ class TestSqureClass(unittest.TestCase):
         sys.stdout = sys.__stdout__
         actual_output = captured_output.getvalue()
         self.assertEqual(actual_output, expected_output)
+
+        captured_output.seek(0)
+        captured_output.truncate(0)
+        sys.stdout = captured_output
+        s = Square(3, 1, 3)
+        print(s, end="")
+        sys.stdout = sys.__stdout__
+        actual_output = captured_output.getvalue()
+        expected_output = "[Square] (2) 1/3 - 3"
+        self.assertEqual(actual_output, expected_output)
+        self.assertEqual(s.area(), 9)
+        captured_output.seek(0)
+        captured_output.truncate(0)
+        sys.stdout = captured_output
+        expected_output = "\n" \
+                          "\n" \
+                          "\n" \
+                          " ###\n" \
+                          " ###\n" \
+                          " ###\n"
+        s.display()
+        sys.stdout = sys.__stdout__
+        actual_output = captured_output.getvalue()
+        self.assertEqual(actual_output, expected_output)
+
+        captured_output.seek(0)
+        captured_output.truncate(0)
+        sys.stdout = captured_output
+        s = Square(3, 1, 3, 12)
+        print(s, end="")
+        sys.stdout = sys.__stdout__
+        actual_output = captured_output.getvalue()
+        expected_output = "[Square] (12) 1/3 - 3"
+        self.assertEqual(actual_output, expected_output)
+        self.assertEqual(s.area(), 9)
+        captured_output.seek(0)
+        captured_output.truncate(0)
+        sys.stdout = captured_output
+        expected_output = "\n" \
+                          "\n" \
+                          "\n" \
+                          " ###\n" \
+                          " ###\n" \
+                          " ###\n"
+        s.display()
+        sys.stdout = sys.__stdout__
+        actual_output = captured_output.getvalue()
+        self.assertEqual(actual_output, expected_output)
