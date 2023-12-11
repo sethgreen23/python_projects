@@ -206,6 +206,32 @@ class TestRectangleValidValues(unittest.TestCase):
         actual_output = capture_output.getvalue()
         self.assertEqual(actual_output, expected_output)
 
+    def test_display_with_x_y(self):
+        """Display the rectangle with offset"""
+        expected_output = "\n" \
+                          "\n" \
+                          "  ##\n" \
+                          "  ##\n" \
+                          "  ##\n"
+        captured_output = StringIO()
+        sys.stdout = captured_output
+        r1 = Rectangle(2, 3, 2, 2)
+        r1.display()
+        sys.stdout = sys.__stdout__
+        actual_output = captured_output.getvalue()
+        self.assertEqual(actual_output, expected_output)
+        captured_output.seek(0)
+        captured_output.truncate(0)
+        expected_output = "\n" \
+                          "   ####\n" \
+                          "   ####\n"
+        sys.stdout = captured_output
+        r1 = Rectangle(4, 2, 3, 1)
+        r1.display()
+        sys.stdout = sys.__stdout__
+        actual_output = captured_output.getvalue()
+        self.assertEqual(actual_output, expected_output)
+
     def test_str(self):
         """Test str print"""
         r = Rectangle(1, 2, 3, 4)
