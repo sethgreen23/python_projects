@@ -58,3 +58,17 @@ class Square(Rectangle):
                     self.x = value
                 elif key == "y":
                     self.y = value
+    def to_dictionary(self):
+        """Return dictionary representation of a Rectangle"""
+        obj_dict = {}
+        for key, value in self.__dict__.items():
+            words = key.split("__")
+            if "id" in words :
+                obj_dict["id"] = value
+            elif "width" in words:
+                obj_dict["size"] = value
+            elif "x" in words:
+                obj_dict["x"] = value
+            elif "y" in words:
+                obj_dict["y"] = value
+        return obj_dict
