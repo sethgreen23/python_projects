@@ -3,22 +3,28 @@ import cmd
 import sys
 
 class HelloWorld(cmd.Cmd):
-    prompt = ">>> "
+    prompt = "(hbnb) "
     def do_greet(self, line):
+        """Document Greet"""
         if line:
             print(f"hello, {line}")
         else:
-            print("hello")  
-    def precmd(self, line):
-        # enable cmd depending on the mode
-        if sys.stdin.isatty:
-            self.prompt = ">>> "
-        else:
-            self.prompt = ""
-        return cmd.Cmd.precmd(self, line)
+            print("hello")
+    def onecmd(self, line):
+        """onecmd"""
+        if not sys.stdin.isatty():
+            print("(hbnb)")
+        return cmd.Cmd.onecmd(self, line)
     def do_EOF(self, line):
+        """Document EOF"""
         print("")
         return True
+    
+    def do_quit(self, line):
+        """Document quit"""
+        print("")
+        return True
+
 if __name__ == "__main__":
     greeting = HelloWorld()
     if sys.stdin.isatty():
