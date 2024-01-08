@@ -16,4 +16,7 @@ class HelloWorld(cmd.Cmd):
 
 
 if __name__=="__main__":
-    HelloWorld().cmdloop()
+    try:
+        HelloWorld().cmdloop()
+    except KeyboardInterrupt:
+        print("Thank you for using our app.")
