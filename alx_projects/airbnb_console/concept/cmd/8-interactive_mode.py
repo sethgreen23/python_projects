@@ -27,18 +27,21 @@ class HelloWorld(cmd.Cmd):
 
 if __name__ == "__main__":
     greeting = HelloWorld()
-    if sys.stdin.isatty():
-        # isattay = True
-        print("im in the intereactive mode")
-        if sys.argv and len(sys.argv) > 1:
-            print("Im inside of the argv")
-            for line in sys.argv[1:]:
-                greeting.onecmd(line.strip())
+    try:
+        if sys.stdin.isatty():
+            # isattay = True
+            print("im in the intereactive mode")
+            if sys.argv and len(sys.argv) > 1:
+                print("Im inside of the argv")
+                for line in sys.argv[1:]:
+                    greeting.onecmd(line.strip())
+            else:
+                print("im not inside of the argv")
+                greeting.cmdloop()
         else:
-            print("im not inside of the argv")
-            greeting.cmdloop()
-    else:
-        # isattay = False
-        print("Im in the non interactive mode")
-        for line in sys.stdin:
-            greeting.onecmd(line.strip())
+            # isattay = False
+            print("Im in the non interactive mode")
+            for line in sys.stdin:
+                greeting.onecmd(line.strip())
+    except KeyboardInterrupt:
+        print("")
