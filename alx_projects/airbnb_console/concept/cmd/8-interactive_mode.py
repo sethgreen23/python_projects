@@ -38,7 +38,6 @@ if __name__ == "__main__":
             if sys.argv and len(sys.argv) > 1:
                 loop_throw(greeting, sys.argv[1:])
             else:
-                print("im not inside of the argv")
                 greeting.cmdloop()
         else:
             # isattay = False
