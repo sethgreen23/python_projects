@@ -17,11 +17,22 @@ class BaseModel:
         updated_at(datetime): time when the instance is updated
     """
 
-    def __init__(self):
+    def __init__(self, *args, **kwrags):
         """Init function of the BaseModel class"""
-        self.id = str(uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+        str_format = "%Y-%m-%dT%H:%M:%S.%f"
+        if kwrags and len(kwrags) > 1:
+            for key, value in kwrags.items():
+                if (key != "__class__"):
+                    if key in ["created_at", "updated_at"]:
+                        setattr(self, key, 
+                                datetime.strptime(value, str_format))
+                    else:
+                        setattr(self, key, value)
+        else:
+            self.id = str(uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
+
 
     def save(self):
         """Update the public instance attribute updated_at
