@@ -25,6 +25,11 @@ class HelloWorld(cmd.Cmd):
         print("")
         return True
 
+def loop_throw(obj, arg):
+    """Loop throw arguments"""
+    for line in arg:
+        obj.oncmd(line.strip())
+
 if __name__ == "__main__":
     greeting = HelloWorld()
     try:
@@ -33,15 +38,13 @@ if __name__ == "__main__":
             print("im in the intereactive mode")
             if sys.argv and len(sys.argv) > 1:
                 print("Im inside of the argv")
-                for line in sys.argv[1:]:
-                    greeting.onecmd(line.strip())
+                loop_throw(greeting, sys.argv[1:])
             else:
                 print("im not inside of the argv")
                 greeting.cmdloop()
         else:
             # isattay = False
             print("Im in the non interactive mode")
-            for line in sys.stdin:
-                greeting.onecmd(line.strip())
+            loop_throw(greeting, sys.stdin)
     except KeyboardInterrupt:
         print("")
