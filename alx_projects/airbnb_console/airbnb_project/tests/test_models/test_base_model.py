@@ -11,44 +11,49 @@ class TestBaseModel(unittest.TestCase):
     Test class for BaseModel class
     """
 
+    def setUp(self):
+        """setUp method for base_model test
+        """
+        self.b1 = BaseModel()
+        self.b2 = BaseModel()
+
+    def tearDown(self):
+        """tearDown method for base_model test
+        """
+        del self.b1
+        del self.b2
+
     def test_uuid(self):
         """Testing the uuid"""
-        b1 = BaseModel()
-        b2 = BaseModel()
-        self.assertTrue(hasattr(b1, "id"))
-        self.assertNotEqual(b1.id, b2.id)
-        self.assertIsInstance(b1, BaseModel)
-        self.assertIsInstance(b1.id, str)
+        self.assertTrue(hasattr(self.b1, "id"))
+        self.assertNotEqual(self.b1.id, self.b2.id)
+        self.assertIsInstance(self.b1, BaseModel)
+        self.assertIsInstance(self.b1.id, str)
 
     def test_created_at(self):
         """Testing created_at"""
-        b1 = BaseModel()
-        self.assertTrue(hasattr(b1, "created_at"))
-        self.assertIsInstance(b1.created_at, datetime)
+        self.assertTrue(hasattr(self.b1, "created_at"))
+        self.assertIsInstance(self.b1.created_at, datetime)
 
     def test_updated_at(self):
         """Testing updated_at"""
-        b1 = BaseModel()
-        self.assertTrue(hasattr(b1, "updated_at"))
-        self.assertIsInstance(b1.updated_at, datetime)
+
+        self.assertTrue(hasattr(self.b1, "updated_at"))
+        self.assertIsInstance(self.b1.updated_at, datetime)
 
     def test_created_at_updated_at(self):
         """Testing dates"""
-        b1 = BaseModel()
-        b2 = BaseModel()
-        self.assertNotEqual(b1.created_at, b2.created_at)
-        self.assertNotEqual(b1.updated_at, b2.updated_at)
+        self.assertNotEqual(self.b1.created_at, self.b2.created_at)
+        self.assertNotEqual(self.b1.updated_at, self.b2.updated_at)
 
     def test_save(self):
         """Testing save"""
-        b1 = BaseModel()
-        b1.save()
-        self.assertIsInstance(b1.updated_at, datetime)
+        self.b1.save()
+        self.assertIsInstance(self.b1.updated_at, datetime)
 
     def test_to_dict(self):
         """Testing to_dict"""
-        b1 = BaseModel()
-        d = b1.to_dict()
+        d = self.b1.to_dict()
         self.assertIsInstance(d, dict)
         self.assertEqual(d["__class__"], "BaseModel")
         self.assertIsInstance(d["created_at"], str)
@@ -56,33 +61,33 @@ class TestBaseModel(unittest.TestCase):
 
     def test_str(self):
         """Testing str"""
-        b1 = BaseModel()
-        str_rep = str(b1)
+        str_rep = str(self.b1)
         self.assertIn("BaseModel", str_rep)
-        self.assertIn(b1.id, str_rep)
+        self.assertIn(self.b1.id, str_rep)
         # order preserving
-        self.assertIn(str(b1.__dict__), str_rep)
+        self.assertIn(str(self.b1.__dict__), str_rep)
 
     def test_init_from_dict(self):
         """
         Testing the creation of instance from a dictionary
         """
-        b1 = BaseModel()
-        b1.name = "My_First_Model"
-        b1.my_number = 89
-        dict_json = b1.to_dict()
+
+        self.b1.name = "My_First_Model"
+        self.b1.my_number = 89
+        dict_json = self.b1.to_dict()
         b1_clone = BaseModel(**dict_json)
         self.assertTrue(hasattr(b1_clone, "id"))
         self.assertTrue(hasattr(b1_clone, "created_at"))
         self.assertTrue(hasattr(b1_clone, "updated_at"))
         self.assertTrue(hasattr(b1_clone, "name"))
         self.assertTrue(hasattr(b1_clone, "my_number"))
-        self.assertEqual(b1.id, b1_clone.id)
-        self.assertEqual(b1.created_at, b1_clone.created_at)
-        self.assertEqual(b1.updated_at, b1_clone.updated_at)
-        self.assertEqual(b1.name, b1_clone.name)
-        self.assertEqual(b1.my_number, b1_clone.my_number)
-        self.assertEqual(str(b1.to_dict()), str(b1_clone.to_dict()))
+        self.assertEqual(self.b1.id, b1_clone.id)
+        self.assertEqual(self.b1.created_at, b1_clone.created_at)
+        self.assertEqual(self.b1.updated_at, b1_clone.updated_at)
+        self.assertEqual(self.b1.name, b1_clone.name)
+        self.assertEqual(self.b1.my_number, b1_clone.my_number)
+        self.assertEqual(str(self.b1.to_dict()), str(b1_clone.to_dict()))
+        self.assertIsInstance(b1_clone, BaseModel)
 
 
 if __name__ == "__main__":
