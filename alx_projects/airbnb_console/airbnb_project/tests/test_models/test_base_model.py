@@ -63,6 +63,27 @@ class TestBaseModel(unittest.TestCase):
         # order preserving
         self.assertIn(str(b1.__dict__), str_rep)
 
+    def test_init_from_dict(self):
+        """
+        Testing the creation of instance from a dictionary
+        """
+        b1 = BaseModel()
+        b1.name = "My_First_Model"
+        b1.my_number = 89
+        dict_json = b1.to_dict()
+        b1_clone = BaseModel(**dict_json)
+        self.assertTrue(hasattr(b1_clone, "id"))
+        self.assertTrue(hasattr(b1_clone, "created_at"))
+        self.assertTrue(hasattr(b1_clone, "updated_at"))
+        self.assertTrue(hasattr(b1_clone, "name"))
+        self.assertTrue(hasattr(b1_clone, "my_number"))
+        self.assertEqual(b1.id, b1_clone.id)
+        self.assertEqual(b1.created_at, b1_clone.created_at)
+        self.assertEqual(b1.updated_at, b1_clone.updated_at)
+        self.assertEqual(b1.name, b1_clone.name)
+        self.assertEqual(b1.my_number, b1_clone.my_number)
+        self.assertEqual(str(b1.to_dict()), str(b1_clone.to_dict()))
+
 
 if __name__ == "__main__":
     unittest.main()
