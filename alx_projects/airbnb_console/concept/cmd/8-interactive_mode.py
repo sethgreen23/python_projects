@@ -35,16 +35,13 @@ if __name__ == "__main__":
     try:
         if sys.stdin.isatty():
             # isattay = True
-            print("im in the intereactive mode")
             if sys.argv and len(sys.argv) > 1:
-                print("Im inside of the argv")
                 loop_throw(greeting, sys.argv[1:])
             else:
                 print("im not inside of the argv")
                 greeting.cmdloop()
         else:
             # isattay = False
-            print("Im in the non interactive mode")
             loop_throw(greeting, sys.stdin)
     except KeyboardInterrupt:
         print("")
