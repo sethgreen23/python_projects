@@ -37,6 +37,30 @@ class TestBaseModel(unittest.TestCase):
         b2 = BaseModel()
         self.assertNotEqual(b1.created_at, b2.created_at)
         self.assertNotEqual(b1.updated_at, b2.updated_at)
-        
+    
+    def test_save(self):
+        """Testing save"""
+        b1 = BaseModel()
+        b1.save()
+        self.assertIsInstance(b1.updated_at, datetime)
+    
+    def test_to_dict(self):
+        """Testing to_dict"""
+        b1 = BaseModel()
+        d = b1.to_dict()
+        self.assertIsInstance(d, dict)
+        self.assertEqual(d["__class__"], "BaseModel")
+        self.assertIsInstance(d["created_at"], str)
+        self.assertIsInstance(d["updated_at"], str)
+    
+    def test_str(self):
+        """Testing str"""
+        b1 = BaseModel()
+        str_rep = str(b1)
+        self.assertIn("BaseModel", str_rep)
+        self.assertIn(b1.id, str_rep)
+        # order preserving
+        self.assertIn(str(b1.__dict__), str_rep)
+    
 if __name__=="__main__":
     unittest.main()    
