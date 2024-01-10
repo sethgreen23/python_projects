@@ -23,7 +23,7 @@ class TestBaseModel(unittest.TestCase):
         del self.b1
         del self.b2
 
-    def test_uuid(self):
+    def test_id(self):
         """Testing the uuid"""
         self.assertTrue(hasattr(self.b1, "id"))
         self.assertNotEqual(self.b1.id, self.b2.id)
@@ -71,7 +71,6 @@ class TestBaseModel(unittest.TestCase):
         """
         Testing the creation of instance from a dictionary
         """
-
         self.b1.name = "My_First_Model"
         self.b1.my_number = 89
         dict_json = self.b1.to_dict()
@@ -88,6 +87,13 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(self.b1.my_number, b1_clone.my_number)
         self.assertEqual(str(self.b1.to_dict()), str(b1_clone.to_dict()))
         self.assertIsInstance(b1_clone, BaseModel)
+
+    def test_save(self):
+        """Test save() method from FileStorage Class in BaseModel class"""
+        update_1 = self.b1.updated_at
+        self.b1.save()
+        update_2 = self.b1.updated_at
+        self.assertNotEqual(update_1, update_2)
 
 
 if __name__ == "__main__":
