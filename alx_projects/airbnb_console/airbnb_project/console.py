@@ -2,6 +2,7 @@
 """Module for the console"""
 
 import cmd
+import sys
 
 class HBNBCommand(cmd.Cmd):
     """
@@ -25,6 +26,12 @@ class HBNBCommand(cmd.Cmd):
         """
         pass
     
+    def precmd(self, args):
+        """Prepare the command
+        """
+        if not sys.stdin.isatty():
+            print()
+        return cmd.Cmd.precmd(self, args)
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()

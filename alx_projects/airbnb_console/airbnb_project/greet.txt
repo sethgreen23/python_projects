@@ -1,0 +1,4 @@
+help
+help quit
+help EOF
+quit
