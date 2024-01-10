@@ -4,7 +4,7 @@ import cmd
 
 class HelloWorld(cmd.Cmd):
     # change the prompt
-	prompt = ">>>"
+	prompt = "(hbbnb)"
 	def do_greet(self, person):
 		"""greet [person]
 		Greet the names person

@@ -28,7 +28,7 @@ class HelloWorld(cmd.Cmd):
 def loop_throw(obj, arg):
     """Loop throw arguments"""
     for line in arg:
-        obj.oncmd(line.strip())
+        obj.onecmd(line.strip())
 
 if __name__ == "__main__":
     greeting = HelloWorld()
