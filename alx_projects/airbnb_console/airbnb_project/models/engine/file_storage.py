@@ -5,6 +5,7 @@ import json
 import os
 import importlib
 
+
 class FileStorage:
     """
     File storage is a class that allows you to
@@ -43,6 +44,7 @@ class FileStorage:
             dic_json = json.load(json_file)
             for key, kwrags in dic_json.items():
                 class_name, id = key.split(".")
+                # Next 3 lines are here for BaseModel
                 copy_class_name = class_name
                 if copy_class_name == "BaseModel":
                     copy_class_name = "Base_Model"

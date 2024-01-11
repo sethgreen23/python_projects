@@ -7,6 +7,7 @@ from models.base_model import BaseModel
 from models import storage
 import os
 
+
 class TestFileStorageClass(unittest.TestCase):
     """Test cases for Class FileStorage"""
 
@@ -23,10 +24,21 @@ class TestFileStorageClass(unittest.TestCase):
         del self.f1
         # del self.f2
         filename = "file.json"
-        try:# Delete the file
+        try:  # Delete the file
             os.remove(filename)
         except FileNotFoundError:
             pass
+
+    def test_attributes(self):
+        """Test attributes for class FileStorage"""
+        FileStorage._FileStorage__objects = {}
+        filename = "file.json"
+        try:  # Delete the file
+            os.remove(filename)
+        except FileNotFoundError:
+            pass
+        self.assertTrue(hasattr(FileStorage, "_FileStorage__file_path"))
+        self.assertTrue(hasattr(FileStorage, "_FileStorage__objects"))
 
     def test_all_empty(self):
         """Tests all() instance method when __objects is empty"""
@@ -57,7 +69,6 @@ class TestFileStorageClass(unittest.TestCase):
     #     self.f1.reload()
     #     obj = self.f1.all()
     #     print("\n",obj)
-
 
     # def test_reload_nofile(self):
     #     """Tests reload() instance method"""
