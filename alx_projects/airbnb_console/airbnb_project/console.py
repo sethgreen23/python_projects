@@ -13,10 +13,6 @@ class HBNBCommand(cmd.Cmd):
     """
     Is the main Class for creating the command and the action
     """
-    class_dict = {
-        "BaseModel": BaseModel,
-        "User": User
-    }
     prompt = "(hbnb) "
     class_names = ["BaseModel", "User", "Place", "State", "City", "Amenity",
                    "Review"]
@@ -164,6 +160,7 @@ updating attribute"""
         return cmd.Cmd.precmd(self, args)
 
     def onecmd(self, line):
+        """Onecmd implementation"""
         args_list = line.split(".")
 
         if len(args_list) > 1:
@@ -172,6 +169,29 @@ updating attribute"""
             line = f"{command} {class_name}"
 
         return cmd.Cmd.onecmd(self, line)
+
+    def do_count(self, line):
+        """Do counting of instances"""
+        # check if class name exists
+        # if it does not exist, print '0' and return
+        # initialize counter
+        # loop through storage.all()
+        # extract the class_name
+        # compare the class_name with the argument from onecmd
+        #       if class_name found:
+        #       increment counter
+        # print(count)
+        count = 0
+        args_list = line.split()
+        class_name = args_list[0]
+        if class_name not in HBNBCommand.class_names:
+            print(count)
+            return
+        for key, kwargs in storage.all().items():
+            c_name, _ = key.split(".")
+            if class_name == c_name:
+                count += 1
+        print(count)
 
     # def preloop(self):
     #     """checks if console is interacting with a terminal or not
