@@ -3,7 +3,9 @@
 
 import cmd
 import sys
+import importlib
 from models.base_model import BaseModel
+from models.user import User
 from models import storage
 
 
@@ -11,8 +13,12 @@ class HBNBCommand(cmd.Cmd):
     """
     Is the main Class for creating the command and the action
     """
+    class_dict = {
+        "BaseModel": BaseModel,
+        "User": User
+    }
     prompt = "(hbnb) "
-    class_names = ["BaseModel"]
+    class_names = ["BaseModel", "User"]
 
     def do_create(self, args):
         """Create new instance of BaseModel, save it and print the id
@@ -25,7 +31,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         # create new instance
-        obj = BaseModel()
+        obj = args()
         # save the new instance
         obj.save()
 
@@ -53,26 +59,9 @@ name and i
                 break
         print(class_representation)
 
-    def do_destroy(self, args):
-        """Delete an instance base on the class name and id
-        """
-        # test if the class name is missing
-        # test if the class name doesnt exist
-        # test if id is missing
-        # test if the id
-        go_on = HBNBCommand.validate_args(args)
-        if go_on:
-            return
-        args_list = args.split(" ")
-        class_name = args_list[0]
-        id = args_list[1]
-        key = f"{class_name}.{id}"
-        del storage.all()[key]
-        storage.save()
-
     def do_all(self, args):
-        """Prints all string representation of all instances based on or not
-the class name
+        """Prints all string representation of all instances based on
+        or not the class name
         """
         # test if class doesnt exist
         args_exist = True
@@ -93,6 +82,48 @@ the class name
             for key, kwargs in storage.all().items():
                 obj_list.append(str(kwargs))
         print(obj_list)
+    def do_destroy(self, args):
+        """Delete an instance base on the class name and id
+        """
+        # test if the class name is missing
+        # test if the class name doesnt exist
+        # test if id is missing
+        # test if the id
+        go_on = HBNBCommand.validate_args(args)
+        if go_on:
+            return
+        args_list = args.split(" ")
+        class_name = args_list[0]
+        id = args_list[1]
+        key = f"{class_name}.{id}"
+        del storage.all()[key]
+        storage.save()
+
+
+    def do_create(self, args):
+        """Create new instance of BaseModel,
+            save it and print the id
+        """
+        # test for the right input
+        if not args:
+            print("** class name missing **")
+            return
+        class_name  = args.split(" ")[0]
+        if class_name not in HBNBCommand.class_names:
+            print("** class doesn't exist **")
+            return
+        copy_class_name = class_name
+        if copy_class_name == "BaseModel":
+            copy_class_name = "Base_Model"
+        module_name = f"models.{copy_class_name.lower()}"
+        module = importlib.import_module(module_name)
+        class_obj = getattr(module, class_name)
+
+        #create new instance
+        obj = class_obj()
+        # save the new instance
+        obj.save()
+
 
     def do_update(self, args):
         """Updates an instance based on the class name and id by adding or

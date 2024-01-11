@@ -61,22 +61,28 @@ class TestFileStorageClass(unittest.TestCase):
         obj = self.f1.all()
         self.assertIsNotNone(obj)
 
-    # def test_save(self):
-    #     """Tests save() instance method"""
-    #     self.b1.name = "My_First_Model"
-    #     self.b1.my_number = 89
-    #     self.b1.save()
-    #     self.f1.reload()
-    #     obj = self.f1.all()
-    #     print("\n",obj)
+    def test_save(self):
+        """Tests save() instance method"""
+        self.b1.name = "My_First_Model"
+        self.b1.my_number = 89
+        self.b1.id = 123456
+        self.b1.save()
+        self.f1.reload()
+        
+        for key, value in self.f1.all().items():
+            search_key = f"{BaseModel}.{self.b1.id}"
+            print(getattr(self.f1.all()[search_key], "my_number"))
+            
+            # self.assertTrue(hasattr(self.f1.all()[key], "my_nmber"))
 
-    # def test_reload_nofile(self):
-    #     """Tests reload() instance method"""
-    #     filename = "file.json"
-    #     try:# Delete the file
-    #         os.remove(filename)
-    #     except FileNotFoundError:
-    #         pass
-    #     result = self.f1.all()
-    #     print("STORAGE\n{}\n".format(self.f1))
-    #     self.assertIsNotNone(result)
+    def test_reload_nofile(self):
+        """Tests reload() instance method"""
+        filename = "file.json"
+        try:  # Delete the file
+            os.remove(filename)
+        except FileNotFoundError:
+            pass
+        self.f1.reload()
+        result = self.f1.all()
+
+        self.assertIsNotNone(result)
