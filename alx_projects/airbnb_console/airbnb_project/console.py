@@ -18,7 +18,8 @@ class HBNBCommand(cmd.Cmd):
         "User": User
     }
     prompt = "(hbnb) "
-    class_names = ["BaseModel", "User"]
+    class_names = ["BaseModel", "User", "Place", "State", "City", "Amenity",
+                   "Review"]
 
     def do_create(self, args):
         """Create new instance of BaseModel, save it and print the id
@@ -82,6 +83,7 @@ name and i
             for key, kwargs in storage.all().items():
                 obj_list.append(str(kwargs))
         print(obj_list)
+
     def do_destroy(self, args):
         """Delete an instance base on the class name and id
         """
@@ -99,7 +101,6 @@ name and i
         del storage.all()[key]
         storage.save()
 
-
     def do_create(self, args):
         """Create new instance of BaseModel,
             save it and print the id
@@ -108,7 +109,7 @@ name and i
         if not args:
             print("** class name missing **")
             return
-        class_name  = args.split(" ")[0]
+        class_name = args.split(" ")[0]
         if class_name not in HBNBCommand.class_names:
             print("** class doesn't exist **")
             return
@@ -119,11 +120,10 @@ name and i
         module = importlib.import_module(module_name)
         class_obj = getattr(module, class_name)
 
-        #create new instance
+        # create new instance
         obj = class_obj()
         # save the new instance
         obj.save()
-
 
     def do_update(self, args):
         """Updates an instance based on the class name and id by adding or
@@ -162,6 +162,16 @@ updating attribute"""
         if not sys.stdin.isatty():
             print()
         return cmd.Cmd.precmd(self, args)
+
+    def onecmd(self, line):
+        args_list = line.split(".")
+
+        if len(args_list) > 1:
+            class_name = args_list[0]
+            command = args_list[1].strip("()")
+            line = f"{command} {class_name}"
+
+        return cmd.Cmd.onecmd(self, line)
 
     # def preloop(self):
     #     """checks if console is interacting with a terminal or not

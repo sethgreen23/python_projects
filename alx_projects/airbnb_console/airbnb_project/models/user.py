@@ -7,7 +7,8 @@ from models.base_model import BaseModel
 
 
 class User(BaseModel):
-    """This Class defines User Class which has the following public class attributes
+    """This Class defines User Class which has the following public class
+attributes
     - email: string - empty string
     - password: string - empty string
     - first_name: string - empty string
@@ -16,5 +17,4 @@ class User(BaseModel):
     email = ""
     password = ""
     first_name = ""
-    last_name = ""    
-   
+    last_name = ""
