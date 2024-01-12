@@ -180,17 +180,15 @@ updating attribute"""
                         line = f"{command} {class_name}"
                     elif command in ["show", "destroy"]:
                         line = f"{command} {class_name} {c_id}"
-                    if command in ["update", "show"] and len(id_c_bracket) > 1:
-                        s_list = id_c_bracket.strip(")").split(", ")
+                    if command in ["update", "show"] and len(c_id) > 1:
+                        s_list = c_id.split(", ")
                         # print(f"\ns_arg_list: {s_list}\n")
-                        if len(s_list) > 2:
-                            if s_list[1].startswith('{'):
-                                pass
-                            else:
-                                line = f"{command} {class_name} {s_list[0]} {s_list[1]} {s_list[2]}"
+                        if len(s_list) == 2:
+                            pass
+                        elif len(s_list) > 2:
+                            line = f"{command} {class_name} {s_list[0]} {s_list[1]} {s_list[2]}"
                                 
                             # print("\nLine: {}\n".format(line))
-                        pass
         return cmd.Cmd.onecmd(self, line)
 
     def do_count(self, line):
@@ -264,8 +262,8 @@ updating attribute"""
                 if type(args_list[3]) not in [str, int, float]:
                     return
                 else:
-                    attr_name = args_list[2].strip("\"")
-                    attr_value = args_list[3].strip("\"")
+                    attr_name = args_list[2].strip("\"'")
+                    attr_value = args_list[3].strip("\"'")
                     # use ID to search for instance
                     # for key, value in storage.all().items():
                     search_key = f"{args_list[0]}.{args_list[1]}"
@@ -299,4 +297,7 @@ updating attribute"""
 
 
 if __name__ == '__main__':
-    HBNBCommand().cmdloop()
+    try:
+        HBNBCommand().cmdloop()
+    except KeyboardInterrupt:
+        print()
