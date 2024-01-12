@@ -160,14 +160,20 @@ updating attribute"""
         return cmd.Cmd.precmd(self, args)
 
     def onecmd(self, line):
-        """Onecmd implementation"""
         args_list = line.split(".")
 
         if len(args_list) > 1:
-            class_name = args_list[0]
-            command = args_list[1].strip("()")
-            line = f"{command} {class_name}"
-
+            # class_name = args_list[0]
+            # command = args_list[1].strip("()")
+            # line = f"{command} {class_name}"
+            class_name, cmd_args = args_list
+            cmd_args_list = cmd_args.split('(')
+            command, id_c_bracket = cmd_args_list
+            c_id = id_c_bracket.strip(')')
+            if command in ["show", "destroy"]:
+                line = f"{command} {class_name} {c_id}"
+            elif command in ["all", "count"]:
+                line = f"{command} {class_name}"
         return cmd.Cmd.onecmd(self, line)
 
     def do_count(self, line):
