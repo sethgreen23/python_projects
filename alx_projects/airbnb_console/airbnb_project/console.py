@@ -120,6 +120,7 @@ name and i
         obj = class_obj()
         # save the new instance
         obj.save()
+        print(obj.id)
 
     def do_update(self, args):
         """Updates an instance based on the class name and id by adding or
@@ -131,6 +132,7 @@ updating attribute"""
         # check if attribute name is missing
         # check if the attribute value exists
         self.cmdName = "update"
+        # print(args)
         go_on = HBNBCommand.validate_args(args, self.cmdName)
         if go_on:
             return
@@ -138,6 +140,7 @@ updating attribute"""
     def do_EOF(self, args):
         """EOF method
         """
+        print()
         return True
 
     def do_quit(self, args):
@@ -167,13 +170,27 @@ updating attribute"""
             # command = args_list[1].strip("()")
             # line = f"{command} {class_name}"
             class_name, cmd_args = args_list
-            cmd_args_list = cmd_args.split('(')
-            command, id_c_bracket = cmd_args_list
-            c_id = id_c_bracket.strip(')')
-            if command in ["show", "destroy"]:
-                line = f"{command} {class_name} {c_id}"
-            elif command in ["all", "count"]:
-                line = f"{command} {class_name}"
+            if len(args_list) > 1:
+                cmd_args_list = cmd_args.split('(')
+                if len(cmd_args_list) > 1:
+                    command, id_c_bracket = cmd_args_list
+                    c_id = id_c_bracket.strip(')')
+                    # print(f"**********\ncommand: {command}\n*********\n")
+                    if command in ["all", "count"]:
+                        line = f"{command} {class_name}"
+                    elif command in ["show", "destroy"]:
+                        line = f"{command} {class_name} {c_id}"
+                    if command in ["update", "show"] and len(id_c_bracket) > 1:
+                        s_list = id_c_bracket.strip(")").split(", ")
+                        # print(f"\ns_arg_list: {s_list}\n")
+                        if len(s_list) > 2:
+                            if s_list[1].startswith('{'):
+                                pass
+                            else:
+                                line = f"{command} {class_name} {s_list[0]} {s_list[1]} {s_list[2]}"
+                                
+                            # print("\nLine: {}\n".format(line))
+                        pass
         return cmd.Cmd.onecmd(self, line)
 
     def do_count(self, line):
@@ -247,7 +264,7 @@ updating attribute"""
                 if type(args_list[3]) not in [str, int, float]:
                     return
                 else:
-                    attr_name = args_list[2]
+                    attr_name = args_list[2].strip("\"")
                     attr_value = args_list[3].strip("\"")
                     # use ID to search for instance
                     # for key, value in storage.all().items():
@@ -271,8 +288,6 @@ updating attribute"""
                                 setattr(storage.all()[key], attr_name,
                                         str(attr_value))
                     storage.save()
-
-                    # class_name.attr_name = attr_value
                     pass
             else:
                 print("** value missing **")
