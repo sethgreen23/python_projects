@@ -4,6 +4,8 @@
 import unittest
 from datetime import datetime
 from models.base_model import BaseModel
+from models import storage
+import time
 
 
 class TestBaseModel(unittest.TestCase):
@@ -22,6 +24,11 @@ class TestBaseModel(unittest.TestCase):
         """
         del self.b1
         del self.b2
+
+    def test_datetime_attr(self):
+        """Test datetime attributes"""
+        self.assertIsInstance(self.b1.created_at, datetime)
+        self.assertIsInstance(self.b2.updated_at, datetime)
 
     def test_id(self):
         """Testing the uuid"""
@@ -65,7 +72,11 @@ class TestBaseModel(unittest.TestCase):
         self.assertIn("BaseModel", str_rep)
         self.assertIn(self.b1.id, str_rep)
         # order preserving
+        cls_rp = str(self.b1)
         self.assertIn(str(self.b1.__dict__), str_rep)
+        format = "[{}] ({}) {}".format(self.b1.__class__.__name__,
+                                       self.b1.id, self.b1.__dict__)
+        self.assertEqual(format, cls_rp)
 
     def test_init_from_dict(self):
         """
@@ -88,12 +99,65 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(str(self.b1.to_dict()), str(b1_clone.to_dict()))
         self.assertIsInstance(b1_clone, BaseModel)
 
+    def test_to_dict_id(self):
+        """Test to_dict method from BaseModel"""
+        dict_b1 = self.b1.to_dict()
+        self.assertIsInstance(dict_b1, dict)
+        self.assertIn('id', dict_b1.keys())
+
+    def test_to_dict_created_at(self):
+        """Test to_dict method from BaseModel"""
+        dict_b1 = self.b1.to_dict()
+        self.assertIsInstance(dict_b1, dict)
+        self.assertIn('created_at', dict_b1.keys())
+
+    def test_to_dict_updated_at(self):
+        """Test to_dict method from BaseModel"""
+        dict_b1 = self.b1.to_dict()
+        self.assertIsInstance(dict_b1, dict)
+        self.assertIn('updated_at', dict_b1.keys())
+
+    def test_to_dict_class_name(self):
+        """Test to_dict method from BaseModel"""
+        dict_b1 = self.b1.to_dict()
+        self.assertEqual(self.b1.__class__.__name__, dict_b1["__class__"])
+
     def test_save(self):
         """Test save() method from FileStorage Class in BaseModel class"""
         update_1 = self.b1.updated_at
         self.b1.save()
         update_2 = self.b1.updated_at
         self.assertNotEqual(update_1, update_2)
+
+    def test_user_type(self):
+        """Test if User instance is of the same type"""
+        self.assertEqual(type(self.b1), BaseModel)
+
+    def test_storage_contains_instances(self):
+        """Test storage contains the instances"""
+        search_key = f"{self.b1.__class__.__name__}.{self.b1.id}"
+        self.assertTrue(search_key in storage.all().keys())
+        search_key = f"{self.b2.__class__.__name__}.{self.b2.id}"
+        self.assertTrue(search_key in storage.all().keys())
+        self.b1.save()
+        self.b2.save()
+
+    def test_save(self):
+        """Test save() method from BaseModel"""
+        update_old = self.b1.updated_at
+        time.sleep(0.1)
+        self.b1.save()
+        updated_new = self.b1.updated_at
+        self.assertNotEqual(update_old, updated_new)
+
+    def test_check_two_instances_with_dict(self):
+        """Test to check an instance created from a dict is different from
+another"""
+        dict_u1 = self.b1.to_dict()
+        instance = BaseModel(**dict_u1)
+        self.assertIsNot(self.b1, instance)
+        self.assertEqual(str(self.b1), str(instance))
+        self.assertFalse(instance is self.b1)
 
 
 if __name__ == "__main__":

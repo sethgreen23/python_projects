@@ -175,20 +175,39 @@ updating attribute"""
                 if len(cmd_args_list) > 1:
                     command, id_c_bracket = cmd_args_list
                     c_id = id_c_bracket.strip(')')
-                    # print(f"**********\ncommand: {command}\n*********\n")
                     if command in ["all", "count"]:
                         line = f"{command} {class_name}"
                     elif command in ["show", "destroy"]:
                         line = f"{command} {class_name} {c_id}"
-                    if command in ["update", "show"] and len(c_id) > 1:
-                        s_list = c_id.split(", ")
-                        # print(f"\ns_arg_list: {s_list}\n")
-                        if len(s_list) == 2:
-                            pass
-                        elif len(s_list) > 2:
-                            line = f"{command} {class_name} {s_list[0]} {s_list[1]} {s_list[2]}"
-                                
-                            # print("\nLine: {}\n".format(line))
+                    if command in ["update"] and len(c_id) > 1:
+                        s_list = c_id.split(", ", maxsplit=1)
+                        id_arguments, arguments = s_list
+                        # Task16 we need to strip the "cotes" from ids 
+                        # The ids needs to be surrounded by "cotes"
+                        # exemple User.update("38f22813-2753-4d42-b37c-57a17f1e4f88", {'first_name': "John", "age": 89})
+                        # this apply to show to
+                        # User.show("246c227a-d5c1-403d-9bc7-6a47bb9f0f68")
+                        # i taged the places with "Update TASK16" 
+                        id_arguments = id_arguments.strip("\"")
+                        arguments = arguments.strip("\"'")
+                        if (arguments.startswith("{")):
+                            arguments = arguments.strip("{}")
+                            arguments_list = arguments.split(", ")
+                            # print(arguments_list)
+                            for i, arg_line in enumerate(arguments_list):
+                                print(arg_line)
+                                key_arg, value_arg = arg_line.split(": ")
+                                print(key_arg)
+                                print(value_arg)
+                                line = f"{command} {class_name} {id_arguments} {key_arg} {value_arg}"
+                                if i == len(arguments_list) - 1:
+                                    return cmd.Cmd.onecmd(self, line)
+                                else:
+                                    cmd.Cmd.onecmd(self, line)
+                        else:
+                            key_arg , value_arg = arguments.split(", ")
+                            line = f"{command} {class_name} {id_arguments} {key_arg} {value_arg}"
+                            
         return cmd.Cmd.onecmd(self, line)
 
     def do_count(self, line):
@@ -270,21 +289,48 @@ updating attribute"""
 
                     for key, value in storage.all().items():
                         if key == search_key:
-                            if hasattr(storage.all()[key], attr_name):
-                                attr_type = type(getattr(storage.all()[key],
-                                                         attr_name)).__name__
-                                if attr_type == "int":
-                                    setattr(storage.all()[key], attr_name,
-                                            int(attr_value))
-                                elif attr_type == "str":
-                                    setattr(storage.all()[key], attr_name,
-                                            str(attr_value))
-                                elif attr_type == "float":
-                                    setattr(storage.all()[key], attr_name,
-                                            float(attr_value))
-                            else:
-                                setattr(storage.all()[key], attr_name,
+                            try:
+                                attr = getattr(storage.all()[key], attr_name)
+                                if HBNBCommand.is_integer(attr):
+                                    # print("____________Is INTEGER___________")
+                                    setattr(storage.all()[key], attr_name, int(attr_value))
+                                elif HBNBCommand.is_float(attr):
+                                    # print("____________Is FLOAT___________")
+                                    setattr(storage.all()[key], attr_name, float(attr_value))
+                                else:
+                                    # print("____________Is STR___________")
+                                    setattr(storage.all()[key], attr_name, str(attr_value))
+                            except AttributeError:
+                                pass
+                            # print(f"attr:\t{attr}")
+                        else:
+                            setattr(storage.all()[key], attr_name,
                                         str(attr_value))
+                            # if hasattr(storage.all()[key], attr_name):
+                            #     attr_type = type(getattr(storage.all()[key],
+                            #                              attr_name)).__name__
+                                # print(f"attr:\t{attr}\t type(attr):\t{type(attr)}")
+                                # print("isnumberic(attr): {}".format(attr.isnumeric()))
+                                # print(f"**************\n\n{attr_type}\n\n***************")
+                                # if HBNBCommand.is_integer(attr):
+                                #     print("____________Is INTEGER___________")
+                                #     setattr(storage.all()[key], attr_name, int(attr_value))
+                                # elif HBNBCommand.is_float(attr):
+                                #     print("____________Is FLOAT___________")
+                                #     setattr(storage.all()[key], attr_name, float(attr_value))
+                                # else:
+                                #     print("____________Is STR___________")
+                                #     setattr(storage.all()[key], attr_name, str(attr_value))
+                                    
+                                # if attr_type == "int":
+                                #     setattr(storage.all()[key], attr_name, int(attr_value))
+                                # elif attr_type == "str":
+                                #     setattr(storage.all()[key], attr_name,
+                                #             str(attr_value))
+                                # elif attr_type == "float":
+                                #     setattr(storage.all()[key], attr_name,
+                                #             float(attr_value))
+                                
                     storage.save()
                     pass
             else:
@@ -294,6 +340,21 @@ updating attribute"""
             print("** attribute name missing **")
             return 1
         return 0
+
+    @staticmethod
+    def is_integer(string):
+        """Method to check if string is an integer"""
+        s = str(string)
+        return s.isdigit() # or (s[0] == '-' and s[1:].isdigit())
+
+    @staticmethod
+    def is_float(s):
+        """Method to check if a string is a floating number"""
+        try:
+            float(s)
+            return True
+        except ValueError:
+            return False
 
 
 if __name__ == '__main__':

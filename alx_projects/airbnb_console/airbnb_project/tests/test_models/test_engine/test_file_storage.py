@@ -6,6 +6,12 @@ from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
 from models import storage
 import os
+from models.user import User
+from models.state import State
+from models.place import Place
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 
 
 class TestFileStorageClass(unittest.TestCase):
@@ -16,13 +22,25 @@ class TestFileStorageClass(unittest.TestCase):
         self.b1 = BaseModel()
         self.b2 = BaseModel()
         self.f1 = FileStorage()
-        # self.f2 = FileStorage()
+        self.a1 = Amenity()
+        self.c1 = City()
+        self.p1 = Place()
+        self.s1 = State()
+        self.r1 = Review()
+        self.u1 = User()
+        self.f2 = FileStorage()
 
     def tearDown(self):
         del self.b1
         del self.b2
         del self.f1
-        # del self.f2
+        del self.a1
+        del self.c1
+        del self.p1
+        del self.s1
+        del self.r1
+        del self.u1
+        del self.f2
         filename = "file.json"
         try:  # Delete the file
             os.remove(filename)
@@ -55,34 +73,99 @@ class TestFileStorageClass(unittest.TestCase):
         self.assertNotEqual(result, {})
         self.assertIs(result, self.f1._FileStorage__objects)
 
-    def test_new(self):
-        """Tests new() instance method"""
+    def test_reload_with_all(self):
+        """Tests all() with None as argument"""
+        with self.assertRaises(TypeError):
+            self.f1.all(None)
+
+    def test_new_with_all_classes(self):
+        """Tests new() instance method with all classes"""
         self.f1.new(self.b1)
-        obj = self.f1.all()
-        self.assertIsNotNone(obj)
+        self.f1.new(self.a1)
+        self.f1.new(self.c1)
+        self.f1.new(self.p1)
+        self.f1.new(self.r1)
+        self.f1.new(self.s1)
+        self.f1.new(self.p1)
+        self.f1.save()
+
+        self.assertIn(f"{self.b1.__class__.__name__}.{self.b1.id}",
+                      self.f1.all().keys())
+        self.assertIn(f"{self.u1.__class__.__name__}.{self.u1.id}",
+                      self.f1.all().keys())
+        self.assertIn(f"{self.a1.__class__.__name__}.{self.a1.id}",
+                      self.f1.all().keys())
+        self.assertIn(f"{self.c1.__class__.__name__}.{self.c1.id}",
+                      self.f1.all().keys())
+        self.assertIn(f"{self.s1.__class__.__name__}.{self.s1.id}",
+                      self.f1.all().keys())
+        self.assertIn(f"{self.p1.__class__.__name__}.{self.p1.id}",
+                      self.f1.all().keys())
 
     def test_save(self):
-        """Tests save() instance method"""
-        self.b1.name = "My_First_Model"
-        self.b1.my_number = 89
-        self.b1.id = 123456
-        self.b1.save()
-        self.f1.reload()
-        
-        for key, value in self.f1.all().items():
-            search_key = f"{BaseModel}.{self.b1.id}"
-            print(getattr(self.f1.all()[search_key], "my_number"))
-            
-            # self.assertTrue(hasattr(self.f1.all()[key], "my_nmber"))
+        """Tests save() instance method with all classes"""
+        self.f1.new(self.b1)
+        self.f1.new(self.a1)
+        self.f1.new(self.c1)
+        self.f1.new(self.p1)
+        self.f1.new(self.r1)
+        self.f1.new(self.s1)
+        self.f1.new(self.p1)
+        self.f1.save()
 
-    def test_reload_nofile(self):
+        self.assertIn(f"{self.b1.__class__.__name__}.{self.b1.id}",
+                      self.f1.all().keys())
+        self.assertIn(f"{self.u1.__class__.__name__}.{self.u1.id}",
+                      self.f1.all().keys())
+        self.assertIn(f"{self.a1.__class__.__name__}.{self.a1.id}",
+                      self.f1.all().keys())
+        self.assertIn(f"{self.c1.__class__.__name__}.{self.c1.id}",
+                      self.f1.all().keys())
+        self.assertIn(f"{self.s1.__class__.__name__}.{self.s1.id}",
+                      self.f1.all().keys())
+        self.assertIn(f"{self.p1.__class__.__name__}.{self.p1.id}",
+                      self.f1.all().keys())
+
+    def test_reload(self):
         """Tests reload() instance method"""
         filename = "file.json"
+        self.f2 = FileStorage()
         try:  # Delete the file
             os.remove(filename)
         except FileNotFoundError:
             pass
-        self.f1.reload()
-        result = self.f1.all()
+        self.f1.new(self.b1)
+        self.f1.new(self.a1)
+        self.f1.new(self.c1)
+        self.f1.new(self.p1)
+        self.f1.new(self.r1)
+        self.f1.new(self.s1)
+        self.f1.new(self.p1)
+        self.f1.save()
+        # use another instance of file storage
+        self.f2.reload()
+        file_objects = self.f2.all()
+        # print(file_objects)
 
-        self.assertIsNotNone(result)
+        self.assertIn(f"{self.b1.__class__.__name__}.{self.b1.id}",
+                      file_objects)
+        self.assertIn(f"{self.u1.__class__.__name__}.{self.u1.id}",
+                      file_objects)
+        self.assertIn(f"{self.a1.__class__.__name__}.{self.a1.id}",
+                      file_objects)
+        self.assertIn(f"{self.c1.__class__.__name__}.{self.c1.id}",
+                      file_objects)
+        self.assertIn(f"{self.s1.__class__.__name__}.{self.s1.id}",
+                      file_objects)
+        self.assertIn(f"{self.p1.__class__.__name__}.{self.p1.id}",
+                      file_objects)
+
+    def test_reload_with_None(self):
+        """Tests reload with None as argument"""
+        with self.assertRaises(TypeError):
+            self.f1.reload(None)
+
+    def test_reload_with_save(self):
+        """Tests save() with None as argument"""
+        with self.assertRaises(TypeError):
+            self.f1.save(None)
