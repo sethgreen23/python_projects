@@ -17,20 +17,20 @@ class HBNBCommand(cmd.Cmd):
     class_names = ["BaseModel", "User", "Place", "State", "City", "Amenity",
                    "Review"]
 
-    def do_create(self, args):
-        """Create new instance of BaseModel, save it and print the id
-        """
-        # test for the right input
-        if not args:
-            print("** class name missing **")
-            return
-        if args not in HBNBCommand.class_names:
-            print("** class doesn't exist **")
-            return
-        # create new instance
-        obj = args()
-        # save the new instance
-        obj.save()
+    # def do_create(self, args):
+    #     """Create new instance of BaseModel, save it and print the id
+    #     """
+    #     # test for the right input
+    #     if not args:
+    #         print("** class name missing **")
+    #         return
+    #     if args not in HBNBCommand.class_names:
+    #         print("** class doesn't exist **")
+    #         return
+    #     # create new instance
+    #     obj = args()
+    #     # save the new instance
+    #     obj.save()
 
     def do_show(self, args):
         """Print the string representaion of an instance based on the class
@@ -163,7 +163,7 @@ updating attribute"""
         return cmd.Cmd.precmd(self, args)
 
     def onecmd(self, line):
-        args_list = line.split(".")
+        args_list = line.split(".", maxsplit=1)
 
         if len(args_list) > 1:
             # class_name = args_list[0]
@@ -178,6 +178,7 @@ updating attribute"""
                     if command in ["all", "count"]:
                         line = f"{command} {class_name}"
                     elif command in ["show", "destroy"]:
+                        c_id = c_id.strip("\"")
                         line = f"{command} {class_name} {c_id}"
                     if command in ["update"] and len(c_id) > 1:
                         s_list = c_id.split(", ", maxsplit=1)
@@ -197,10 +198,11 @@ updating attribute"""
                             for i, arg_line in enumerate(arguments_list):
                                 print(arg_line)
                                 key_arg, value_arg = arg_line.split(": ")
-                                print(key_arg)
-                                print(value_arg)
+                                # print(key_arg)
+                                # print(value_arg)
                                 line = f"{command} {class_name} {id_arguments} {key_arg} {value_arg}"
                                 if i == len(arguments_list) - 1:
+                                    print(f'Last value {key_arg}: {value_arg}')
                                     return cmd.Cmd.onecmd(self, line)
                                 else:
                                     cmd.Cmd.onecmd(self, line)
@@ -275,6 +277,7 @@ updating attribute"""
     @staticmethod
     def validate_update(args_list, class_name):
         """Helper function for validate args in the case of update cmd"""
+        print(args_list)
         if len(args_list) >= 3:
             if len(args_list) >= 4:
                 # add attribute or update its value if it exists
