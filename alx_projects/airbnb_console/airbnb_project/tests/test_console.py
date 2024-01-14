@@ -82,7 +82,7 @@ class TestHBNBCommand_help(unittest.TestCase):
             self.assertEqual(help_doc, output.getvalue().strip())
 
     def test_help_show(self):
-        help_doc = ("Print the string representaion of instance based name and id")
+        help_doc = ("Print the string representaion of an instance")
         with patch("sys.stdout", new=StringIO()) as output:
             self.assertFalse(HBNBCommand().onecmd("help show"))
             self.assertEqual(help_doc, output.getvalue().strip())
@@ -112,9 +112,11 @@ class TestHBNBCommand_help(unittest.TestCase):
             self.assertEqual(help_doc, output.getvalue().strip())
 
     def test_help(self):
-        help_doc = ("Documented commands (type help <topic>):\n"
-             "========================================\n"
-             "EOF  all  count  create  destroy  help  quit  show  update")
+        help_doc = (
+            "Documented commands (type help <topic>):\n"
+            "========================================\n"
+            "EOF  all  count  create  destroy  help  quit  show  update"
+            )
         with patch("sys.stdout", new=StringIO()) as output:
             self.assertFalse(HBNBCommand().onecmd("help"))
             self.assertEqual(help_doc, output.getvalue().strip())
