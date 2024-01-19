@@ -1,0 +1,3 @@
+[submodule "good_projects/good_projects/airbnb_bader_console"]
+	path = good_projects/good_projects/airbnb_bader_console
+	url = git@github.com:naanaa59/AirBnB_clone.git
