@@ -1,0 +1,30 @@
+# Inside the Python interpreter or in a script
+
+from app import app, db, Item
+
+# Manually create and push the application context
+app_ctx = app.app_context()
+app_ctx.push()
+
+# Now you can perform SQLAlchemy operations
+db.create_all()
+# Add other database operations here if needed
+item1 = Item(name="Samsung Tablet", price=2000, barcode="987654321123", description="Samsung tablet")
+item2 = Item(name="Iphone 10", price=2000, barcode="123456789321", description="Iphne phone model")
+db.session.add([item1, item2])
+db.session.commit()
+Item.query.all()
+# Don't forget to pop the application context when you are done
+app_ctx.pop()
+
+
+
+
+from app import app, db, Item
+with app.app_context():
+     db.create_all()
+     item1 = Item(name="Samsung Tablet", price=2000, barcode="987654321123", description="Samsung tablet model")
+     item2 = Item(name="Iphone 10", price=2000, barcode="123456789321", description="Iphne phone model")
+     db.session.add(item1)
+     db.session.add(item2)
+     db.session.commit()
